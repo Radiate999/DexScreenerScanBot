@@ -57,18 +57,14 @@ const server = http.createServer((req, res) => {
 // Start the server
 server.listen(port, () => {
   console.log(`🚀 Web server is listening on port ${port}`);
-  console.log(`➡️ Endpoint for cron-job.org: http://localhost:${port}/scan`);
+  console.log(`➡️ Endpoint for manual trigger: http://localhost:${port}/scan`);
   
-  // If running locally (without process.env.PORT), start the scan immediately and run on interval
-  if (!process.env.PORT) {
-    console.log('ℹ️ Running in local mode. Executing initial scan now...');
-    runScan();
-    
-    // Fallback interval for local execution: scan every 60 minutes
-    const INTERVAL_MS = 60 * 60 * 1000;
-    setInterval(runScan, INTERVAL_MS);
-    console.log(`🚀 Local interval scheduler activated. Next scan in 60 minutes.`);
-  } else {
-    console.log('ℹ️ Running in cloud mode. Waiting for HTTP pings to /scan...');
-  }
+  // Start the scan immediately on startup
+  console.log('ℹ️ Executing initial scan on startup...');
+  runScan();
+  
+  // Run scan every 60 minutes (keeps running 24/7 if kept awake by UptimeRobot)
+  const INTERVAL_MS = 60 * 60 * 1000;
+  setInterval(runScan, INTERVAL_MS);
+  console.log('🚀 Hourly interval scheduler activated. Next scan in 60 minutes.');
 });
