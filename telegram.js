@@ -125,11 +125,11 @@ function generateHtmlReport(results) {
   const dateStr = new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
   let html = `📊 <b>DEXSCREENER SCAN REPORT</b> 📊\n`;
   html += `📅 <code>${dateStr}</code>\n`;
-  html += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+  html += `-\n\n`;
 
   // 1. New Pairs Section (Max 5)
   html += `🔥 <b>1. New Pairs (≤ 61m, Vol &gt; $50k)</b>\n`;
-  html += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  html += `-\n`;
   if (results.newPairs.length === 0) {
     html += `<i>No new pairs matching criteria.</i>\n\n`;
   } else {
@@ -138,18 +138,20 @@ function generateHtmlReport(results) {
       const chain = formatChainName(pair.chainId);
       const vol = formatUsd(pair.volume?.h24 || 0);
       const liq = formatUsd(pair.liquidity?.usd || 0);
+      const mcap = formatUsd(pair.marketCap || pair.fdv || 0);
       const age = formatAge(pair);
       const links = formatLinksHtml(pair);
       
       html += `⚡ ${label} (${chain})\n`;
-      html += `⏱️ Age: <code>${age}</code> | 💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n`;
+      html += `⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n`;
+      html += `💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n`;
       html += `🔗 ${links}\n\n`;
     });
   }
 
   // 2. Highest Volume Section (Max 10)
   html += `🚀 <b>2. Top Volume Tokens (&lt; $1B MCAP)</b>\n`;
-  html += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  html += `-\n`;
   if (results.highestVolume.length === 0) {
     html += `<i>No candidates found.</i>\n\n`;
   } else {
@@ -171,7 +173,7 @@ function generateHtmlReport(results) {
     // Append chain leaders if any chain is not represented in the top 10
     if (results.chainLeaders && results.chainLeaders.length > 0) {
       html += `📍 <b>Other Chain Leaders:</b>\n`;
-      html += `──────────────────────\n`;
+      html += `-\n`;
       results.chainLeaders.forEach((pair) => {
         const label = formatTokenLabel(pair);
         const chain = formatChainName(pair.chainId);
@@ -191,7 +193,7 @@ function generateHtmlReport(results) {
 
   // 3. Down Pairs Section (Max 5)
   html += `🔴 <b>3. Top 24h Loss (50-75% Down, Vol &gt; $50k)</b>\n`;
-  html += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  html += `-\n`;
   if (results.downPairs.length === 0) {
     html += `<i>No tokens matching criteria.</i>\n\n`;
   } else {
@@ -211,7 +213,7 @@ function generateHtmlReport(results) {
     });
   }
 
-  html += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  html += `-\n`;
   return html;
 }
 
@@ -238,9 +240,9 @@ export async function sendTelegramReport(results) {
       // Header + Section 1
       let s1 = `📊 <b>DEXSCREENER SCAN REPORT</b> 📊\n`;
       s1 += `📅 <code>${dateStr}</code>\n`;
-      s1 += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+      s1 += `-\n\n`;
       s1 += `🔥 <b>1. New Pairs (≤ 61m, Vol &gt; $50k)</b>\n`;
-      s1 += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      s1 += `-\n`;
       if (results.newPairs.length === 0) {
         s1 += `<i>No new pairs matching criteria.</i>\n\n`;
       } else {
@@ -249,16 +251,17 @@ export async function sendTelegramReport(results) {
           const chain = formatChainName(pair.chainId);
           const vol = formatUsd(pair.volume?.h24 || 0);
           const liq = formatUsd(pair.liquidity?.usd || 0);
+          const mcap = formatUsd(pair.marketCap || pair.fdv || 0);
           const age = formatAge(pair);
           const links = formatLinksHtml(pair);
-          s1 += `⚡ ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
+          s1 += `⚡ ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
         });
       }
       sections.push(s1);
 
       // Section 2 (including chain leaders)
       let s2 = `🚀 <b>2. Top Volume Tokens (&lt; $1B MCAP)</b>\n`;
-      s2 += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      s2 += `-\n`;
       if (results.highestVolume.length === 0) {
         s2 += `<i>No candidates found.</i>\n\n`;
       } else {
@@ -275,7 +278,7 @@ export async function sendTelegramReport(results) {
 
         if (results.chainLeaders && results.chainLeaders.length > 0) {
           s2 += `📍 <b>Other Chain Leaders:</b>\n`;
-          s2 += `──────────────────────\n`;
+          s2 += `-\n`;
           results.chainLeaders.forEach((pair) => {
             const label = formatTokenLabel(pair);
             const chain = formatChainName(pair.chainId);
@@ -292,7 +295,7 @@ export async function sendTelegramReport(results) {
 
       // Section 3 + Footer
       let s3 = `🔴 <b>3. Top 24h Loss (50-75% Down, Vol &gt; $50k)</b>\n`;
-      s3 += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      s3 += `-\n`;
       if (results.downPairs.length === 0) {
         s3 += `<i>No tokens matching criteria.</i>\n\n`;
       } else {
@@ -307,7 +310,7 @@ export async function sendTelegramReport(results) {
           s3 += `📉 ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 🔴 Change: <b>${change}</b>\n💎 MC: <code>${mcap}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
         });
       }
-      s3 += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+      s3 += `-\n`;
       sections.push(s3);
 
       for (const section of sections) {
