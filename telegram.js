@@ -141,8 +141,10 @@ function generateHtmlReport(results) {
       const mcap = formatUsd(pair.marketCap || pair.fdv || 0);
       const age = formatAge(pair);
       const links = formatLinksHtml(pair);
+      const addr = pair.baseToken?.address || 'N/A';
       
       html += `⚡ ${label} (${chain})\n`;
+      html += `<code>${addr}</code>\n`;
       html += `⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n`;
       html += `💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n`;
       html += `🔗 ${links}\n\n`;
@@ -163,8 +165,10 @@ function generateHtmlReport(results) {
       const change = formatPercent(pair.priceChange?.h24 || 0);
       const age = formatAge(pair);
       const links = formatLinksHtml(pair);
+      const addr = pair.baseToken?.address || 'N/A';
       
       html += `${index + 1}. ${label} (${chain})\n`;
+      html += `<code>${addr}</code>\n`;
       html += `⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n`;
       html += `📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n`;
       html += `🔗 ${links}\n\n`;
@@ -182,8 +186,10 @@ function generateHtmlReport(results) {
         const change = formatPercent(pair.priceChange?.h24 || 0);
         const age = formatAge(pair);
         const links = formatLinksHtml(pair);
+        const addr = pair.baseToken?.address || 'N/A';
         
         html += `🔹 ${label} (${chain})\n`;
+        html += `<code>${addr}</code>\n`;
         html += `⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n`;
         html += `📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n`;
         html += `🔗 ${links}\n\n`;
@@ -205,8 +211,10 @@ function generateHtmlReport(results) {
       const change = formatPercent(pair.priceChange?.h24 || 0);
       const age = formatAge(pair);
       const links = formatLinksHtml(pair);
+      const addr = pair.baseToken?.address || 'N/A';
       
       html += `📉 ${label} (${chain})\n`;
+      html += `<code>${addr}</code>\n`;
       html += `⏱️ Age: <code>${age}</code> | 🔴 Change: <b>${change}</b>\n`;
       html += `💎 MC: <code>${mcap}</code> | 📊 Vol: <code>${vol}</code>\n`;
       html += `🔗 ${links}\n\n`;
@@ -254,7 +262,8 @@ export async function sendTelegramReport(results) {
           const mcap = formatUsd(pair.marketCap || pair.fdv || 0);
           const age = formatAge(pair);
           const links = formatLinksHtml(pair);
-          s1 += `⚡ ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
+          const addr = pair.baseToken?.address || 'N/A';
+          s1 += `⚡ ${label} (${chain})\n<code>${addr}</code>\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n💧 Liq: <code>${liq}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
         });
       }
       sections.push(s1);
@@ -273,7 +282,8 @@ export async function sendTelegramReport(results) {
           const change = formatPercent(pair.priceChange?.h24 || 0);
           const age = formatAge(pair);
           const links = formatLinksHtml(pair);
-          s2 += `${index + 1}. ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n🔗 ${links}\n\n`;
+          const addr = pair.baseToken?.address || 'N/A';
+          s2 += `${index + 1}. ${label} (${chain})\n<code>${addr}</code>\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n🔗 ${links}\n\n`;
         });
 
         if (results.chainLeaders && results.chainLeaders.length > 0) {
@@ -287,7 +297,8 @@ export async function sendTelegramReport(results) {
             const change = formatPercent(pair.priceChange?.h24 || 0);
             const age = formatAge(pair);
             const links = formatLinksHtml(pair);
-            s2 += `🔹 ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n🔗 ${links}\n\n`;
+            const addr = pair.baseToken?.address || 'N/A';
+            s2 += `🔹 ${label} (${chain})\n<code>${addr}</code>\n⏱️ Age: <code>${age}</code> | 💎 MC: <code>${mcap}</code>\n📊 Vol: <code>${vol}</code> | 📈 24h: <code>${change}</code>\n🔗 ${links}\n\n`;
           });
         }
       }
@@ -307,7 +318,8 @@ export async function sendTelegramReport(results) {
           const change = formatPercent(pair.priceChange?.h24 || 0);
           const age = formatAge(pair);
           const links = formatLinksHtml(pair);
-          s3 += `📉 ${label} (${chain})\n⏱️ Age: <code>${age}</code> | 🔴 Change: <b>${change}</b>\n💎 MC: <code>${mcap}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
+          const addr = pair.baseToken?.address || 'N/A';
+          s3 += `📉 ${label} (${chain})\n<code>${addr}</code>\n⏱️ Age: <code>${age}</code> | 🔴 Change: <b>${change}</b>\n💎 MC: <code>${mcap}</code> | 📊 Vol: <code>${vol}</code>\n🔗 ${links}\n\n`;
         });
       }
       s3 += `-\n`;
